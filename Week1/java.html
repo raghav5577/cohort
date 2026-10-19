@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skill Swap</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        .form {
+            display: flex;
+            flex-direction: column;
+        }
+        input, button {
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+        }
+        .hidden {
+            display: none;
+        }
+        video {
+            width: 100%;
+            max-height: 300px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="register-container">
+        <h2>Register for Skill Swap</h2>
+        <form class="form" onsubmit="register(event)">
+            <input type="text" id="reg-username" placeholder="Choose Username" required>
+            <input type="password" id="reg-password" placeholder="Choose Password" required>
+            <button type="submit">Register</button>
+        </form>
+        <p>Already have an account? <a href="#" onclick="showLogin()">Login here</a></p>
+    </div>
+    
+    <div class="container hidden" id="login-container">
+        <h2>Welcome to Skill Swap</h2>
+        <p>Learn and Teach Skills in Real-Time</p>
+        <form class="form" onsubmit="login(event)">
+            <input type="text" id="username" placeholder="Enter Username" required>
+            <input type="password" id="password" placeholder="Enter Password" required>
+            <button type="submit">Login</button>
+        </form>
+    </div>
+    
+    <div class="container hidden" id="dashboard">
+        <h2>Dashboard</h2>
+        <p>Welcome, <span id="user-role"></span>!</p>
+        <button onclick="startVideoChat()">Start Video Chat</button>
+        <button onclick="startMessaging()">Start Messaging</button>
+        <h3>Available Educators:</h3>
+        <ul id="educators-list"></ul>
+    </div>
+
+    <div class="container hidden" id="video-chat">
+        <h2>Video Chat</h2>
+        <video id="localVideo" autoplay playsinline></video>
+        <video id="remoteVideo" autoplay playsinline></video>
+        <button onclick="startCall()">Start Call</button>
+    </div>
+
+    <div class="container hidden" id="chat">
+        <h2>Chat Room</h2>
+        <div id="messages"></div>
+        <input type="text" id="chatInput" placeholder="Type a message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        const users = {};
+        const educators = [];
+
+        function register(event) {
+            event.preventDefault();
+            const username = document.getElementById('reg-username').value;
+            const password = document.getElementById('reg-password').value;
+            
+            if (users[username]) {
+                alert('Username already exists!');
+            } else {
+                users[username] = password;
+                educators.push(username);
+                alert('Registration successful! Please log in.');
+                showLogin();
+            }
+        }
+
+        function showLogin() {
+            document.getElementById('register-container').classList.add('hidden');
+            document.getElementById('login-container').classList.remove('hidden');
+        }
+
+        function login(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (users[username] && users[username] === password) {
+                document.getElementById('login-container').classList.add('hidden');
+                document.getElementById('dashboard').classList.remove('hidden');
+                document.getElementById('user-role').innerText = username;
+                displayEducators();
+            } else {
+                alert('Invalid credentials!');
+            }
+        }
+
+        function displayEducators() {
+            const list = document.getElementById('educators-list');
+            list.innerHTML = '';
+            educators.forEach(educator => {
+                const li = document.createElement('li');
+                li.innerText = educator;
+                li.onclick = () => connectWithEducator(educator);
+                list.appendChild(li);
+            });
+        }
+
+        function connectWithEducator(educator) {
+            alert(`Connecting with ${educator} for a skill swap session!`);
+            startVideoChat();
+        }
+
+        function startVideoChat() {
+            document.getElementById('dashboard').classList.add('hidden');
+            document.getElementById('video-chat').classList.remove('hidden');
+        }
+
+        function startMessaging() {
+            document.getElementById('dashboard').classList.add('hidden');
+            document.getElementById('chat').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
