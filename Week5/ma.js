@@ -3,7 +3,8 @@ const app = express();
 
 function logDetails(req, res, next) {
     console.log(`Method: ${req.method}`)
-    console.log(`url: ${req.url}`)
+    console.log(`URL: ${req.url}`)
+    console.log(`Host: ${req.hostname}`)
     console.log(`Date: ${new Date()}`);
     next();
 }
